@@ -863,14 +863,23 @@ def controller_pps_meteradd(datapath=None, pps=0):
         bands=[parser.OFPMeterBandDrop(rate=pps)])
 
 
+def controller_pps_metermodify(datapath=None, pps=0):
+    """Modify an existing PPS meter towards controller."""
+    return parser.OFPMeterMod(
+        datapath=datapath,
+        command=ofp.OFPMC_MODIFY,
+        flags=ofp.OFPMF_PKTPS,
+        meter_id=ofp.OFPM_CONTROLLER,
+        bands=[parser.OFPMeterBandDrop(rate=pps)])
+
+
 def controller_pps_meterdel(datapath=None):
     """Delete a PPS meter towards controller."""
     return parser.OFPMeterMod(
         datapath=datapath,
         command=ofp.OFPMC_DELETE,
-        flags=ofp.OFPMF_PKTPS,
+        flags=0,
         meter_id=ofp.OFPM_CONTROLLER)
-
 
 def is_global_flowdel(ofmsg):
     """Is a delete of all flows in all tables."""

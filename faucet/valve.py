@@ -337,7 +337,7 @@ class Valve:
         """Add rate limiting of packet in pps (not supported by many DPs)."""
         if self.dp.packetin_pps:
             return [
-                valve_of.controller_pps_meterdel(),
+                valve_of.meterdel(),
                 valve_of.controller_pps_meteradd(pps=self.dp.packetin_pps)]
         return []
 
@@ -1644,13 +1644,15 @@ class Valve:
                 deleted_vids (set): deleted VLAN IDs.
                 changed_vids (set): changed/added VLAN IDs.
                 all_ports_changed (bool): True if all ports changed.
+                changed_packetin_meter (None or int): changed packetin meter
         Returns:
             tuple:
                 cold_start (bool): whether cold starting.
                 ofmsgs (list): OpenFlow messages.
         """
         (deleted_ports, changed_ports, changed_acl_ports,
-         deleted_vids, changed_vids, all_ports_changed) = changes
+         deleted_vids, changed_vids, all_ports_changed,
+         meter_flag) = changes
 
         if self._pipeline_change():
             self.logger.info('pipeline change')
@@ -1687,6 +1689,14 @@ class Valve:
             ofmsgs.extend(self.add_vlans(changed_vlans))
         if changed_ports:
             ofmsgs.extend(self.ports_add(all_up_port_nos))
+        if meter_flag is 0:
+            ofmsgs.extend([valve_of.controller_pps_meterdel()])
+        elif meter_flag == 1:
+            ofmsgs.extend([valve_of.controller_pps_meteradd(pps=self.dp.packetin_pps)])
+        elif meter_flag == 2:
+            ofmsgs.extend([valve_of.controller_pps_metermodify(pps=self.dp.packetin_pps)])
+        else:
+            pass
         if self.acl_manager and changed_acl_ports:
             for port_num in changed_acl_ports:
                 port = self.dp.ports[port_num]

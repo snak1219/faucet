@@ -1385,6 +1385,29 @@ configuration.
 
         return (changes, deleted_confs, added_confs, changed_confs, same_confs)
 
+    def _get_packetin_pps_changes(self, logger, new_dp):
+        """Detect any config changes to packetin_pps.
+
+        Args:
+            logger (ValveLogger): logger instance.
+            new_dp (DP): new dataplane configuration.
+        Returns:
+            meter_flag (None or int): Indicator for MeterMod
+        """
+        # delete pps meter
+        if self.packetin_pps is not None and (new_dp.packetin_pps is None):
+            return 0
+        # add pps meter
+        elif self.packetin_pps is None and (new_dp.packetin_pps is not None):
+            return 1
+        # modify existing pps meter
+        elif (self.packetin_pps - new_dp.packetin_pps) != 0:
+            return 2
+        # do nothing
+        else:
+            return None
+
+
     def _get_acl_config_changes(self, logger, new_dp):
         """Detect any config changes to ACLs.
 
@@ -1488,6 +1511,7 @@ configuration.
                 deleted_vlans (set): deleted VLAN IDs.
                 changed_vlans (set): changed/added VLAN IDs.
                 all_ports_changed (bool): True if all ports changed.
+                meter_flag (None or int): indicates pkt_in_meter_mod action
         """
         def _table_configs(dp):
             return frozenset([
@@ -1507,10 +1531,12 @@ configuration.
             (all_ports_changed, deleted_ports,
              changed_ports, changed_acl_ports) = self._get_port_config_changes(
                  logger, new_dp, changed_vlans, changed_acls)
+            meter_flag = self._get_packetin_pps_changes(logger, new_dp)
             return (deleted_ports, changed_ports, changed_acl_ports,
-                    deleted_vlans, changed_vlans, all_ports_changed)
+                    deleted_vlans, changed_vlans, all_ports_changed,
+                    meter_flag)
         # default cold start
-        return (set(), set(), set(), set(), set(), True)
+        return (set(), set(), set(), set(), set(), True, None)
 
     def get_tables(self):
         """Return tables as dict for API call."""
