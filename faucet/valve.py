@@ -341,11 +341,25 @@ class Valve:
                 valve_of.controller_pps_meteradd(pps=self.dp.packetin_pps)]
         return []
 
+    def _dump_meters(self):
+        """Send a OFPST_METER_CONFIG Request"""
+        if self.dp.dump_meters:
+            return [valve_of.dump_meters(datapath=self.dp)]
+        return []
+
+    def _meter_stats(self):
+        """Send a OFPST_METER_CONFIG Request"""
+        if self.dp.meter_stats:
+            return [valve_of.meter_stats(datapath=self.dp)]
+        return []
+
     def _add_default_flows(self):
         """Configure datapath with necessary default tables and rules."""
         ofmsgs = []
         ofmsgs.extend(self._delete_all_valve_flows())
         ofmsgs.extend(self._add_packetin_meter())
+        ofmsgs.extend(self._dump_meters())
+        ofmsgs.extend(self._meter_stats())
         if self.dp.meters:
             for meter in self.dp.meters.values():
                 ofmsgs.append(meter.entry_msg)

@@ -857,6 +857,7 @@ def meteradd(meter_conf, command=ofp.OFPMC_ADD):
     noop_dp.msg.datapath = None
     return noop_dp.msg
 
+
 def controller_pps_meteradd(datapath=None, pps=0):
     """Add a PPS meter towards controller."""
     return parser.OFPMeterMod(
@@ -874,6 +875,16 @@ def controller_pps_meterdel(datapath=None):
         command=ofp.OFPMC_DELETE,
         flags=ofp.OFPMF_PKTPS,
         meter_id=ofp.OFPM_CONTROLLER)
+
+
+def dump_meters(datapath=None):
+    """Dump Meters to controller"""
+    return parser.OFPMeterConfigStatsRequest(datapath=datapath)
+
+
+def meter_stats(datapath=None):
+    """Add a PPS meter towards controller."""
+    return parser.OFPMeterFeaturesStatsRequest(datapath=datapath)
 
 
 def is_global_flowdel(ofmsg):
