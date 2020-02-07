@@ -353,11 +353,16 @@ class Valve:
             return [valve_of.meter_stats(datapath=self.dp)]
         return []
 
+    def _del_meters(self):
+        """Send a OFPST_METER_CONFIG Request"""
+        return [valve_of.meter_stats(datapath=self.dp)]
+
     def _add_default_flows(self):
         """Configure datapath with necessary default tables and rules."""
         ofmsgs = []
         ofmsgs.extend(self._delete_all_valve_flows())
         ofmsgs.extend(self._add_packetin_meter())
+        ofmsgs.extend(self._del_meters())
         ofmsgs.extend(self._dump_meters())
         ofmsgs.extend(self._meter_stats())
         if self.dp.meters:
