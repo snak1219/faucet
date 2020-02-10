@@ -370,6 +370,9 @@ class Valve:
         ofmsgs.extend(self._delete_all_valve_flows())
         ofmsgs.extend(self._add_packetin_meter())
         ofmsgs.extend(self._add_slowpath_meter())
+        ofmsgs.extend(self._dump_meters())
+        ofmsgs.extend(self._meter_stats())
+        ofmsgs.extend(self._supported_meters())
         if self.dp.meters:
             for meter in self.dp.meters.values():
                 ofmsgs.append(meter.entry_msg)

@@ -48,7 +48,7 @@ class Meter(Conf):
     def check_config(self):
         super(Meter, self).check_config()
         test_config_condition(
-            self.meter_id < 0, 'meter_id is than 0')
+            self.meter_id <= 0, 'meter_id is than 0')
         test_config_condition(
-            self.meter_id > 4294901760,
+            self.meter_id >= 4294901760,
             'DP meter_id cannot exceed 4294901760 per OF13 specification')
