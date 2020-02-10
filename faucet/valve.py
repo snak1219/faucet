@@ -347,6 +347,23 @@ class Valve:
                 valve_of.slowpath_pps_meteradd(pps=self.dp.slowpath_pps)]
         return []
 
+    def _dump_meters(self):
+        """Send a OFPST_Meter_CONFIG Request"""
+        if self.dp.dump_meters:
+            return [valve_of.dump_meters(datapath=self.dp)]
+        return []
+
+    def _meter_stats(self):
+        """Send a OFP_METER_STATS Request"""
+        if self.dp.meter_stats:
+            return [valve_of.meter_stats()]
+        return []
+
+    def _supported_meters(self):
+        """Send a OFP_METER_FEATURES_STATS Request"""
+        if self.dp.supported_meters:
+            return [valve_of.supported_meters()]
+
     def _add_default_flows(self):
         """Configure datapath with necessary default tables and rules."""
         ofmsgs = []

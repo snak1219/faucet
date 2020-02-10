@@ -100,6 +100,12 @@ configuration.
         # Ask switch to rate limit packetin pps. TODO: Not supported by OVS in 2.7.0
         'slowpath_pps': None,
         # Ask switch to rate limit slowpath pps. TODO: Not supported by OVS in 2.7.0
+        'dump_meters': False,
+        # Ask switch dump all meters
+        'meter_stats': False,
+        # Ask switch to dump statistics of all meters
+        'supported_meters': False,
+        # Ask switch to dump all supported meters
         'learn_jitter': 0,
         # Jitter learn timeouts by up to this many seconds
         'learn_ban_timeout': 0,
@@ -179,6 +185,9 @@ configuration.
         'max_resolve_backoff_time': int,
         'packetin_pps': int,
         'slowpath_pps': int,
+        'dump_meters': bool,
+        'meter_stats': bool,
+        'supported_meters': bool,
         'learn_jitter': int,
         'learn_ban_timeout': int,
         'advertise_interval': int,
@@ -288,6 +297,9 @@ configuration.
         self.output_only_ports = None
         self.packetin_pps = None
         self.slowpath_pps = None
+        self.dump_meters = None
+        self.meter_stats = None
+        self.supported_meters = None
         self.ports = None
         self.priority_offset = None
         self.proactive_learn_v4 = None

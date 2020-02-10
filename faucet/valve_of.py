@@ -896,6 +896,21 @@ def slowpath_pps_meterdel(datapath=None):
         meter_id=ofp.OFPM_SLOWPATH)
 
 
+def dump_meters(datapath=None):
+    """Dump Meters to Controller"""
+    return parser.OFPMeterConfigStatsRequest(datapath=datapath)
+
+
+def meter_stats(datapath=None):
+    """Dump Meter Stats to Controller"""
+    return parser.OFPMeterStatsRequest(datapath=datapath)
+
+
+def supported_meters(datapath=None):
+    """Dump Supported Meters to Controller"""
+    return parser.OFPMeterFeaturesStatsRequest(datapath=datapath)
+
+
 def is_global_flowdel(ofmsg):
     """Is a delete of all flows in all tables."""
     return is_flowdel(ofmsg) and ofmsg.table_id == ofp.OFPTT_ALL and not ofmsg.match.items()
