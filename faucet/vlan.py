@@ -98,6 +98,8 @@ class VLAN(Conf):
         'faucet_vips': None,
         'faucet_mac': FAUCET_MAC,
         # set MAC for FAUCET VIPs on this VLAN
+        'udp_fwd': None,
+        # UDP Ports mapped to Ip addresses to direct broadcast to.
         'unicast_flood': True,
         'routes': None,
         'max_hosts': 256,
@@ -128,6 +130,7 @@ class VLAN(Conf):
         'acls_out': list,
         'faucet_vips': list,
         'faucet_mac': str,
+        'udp_fwd': (int, str),
         'unicast_flood': bool,
         'routes': list,
         'max_hosts': int,
@@ -153,6 +156,7 @@ class VLAN(Conf):
         self.edge_learn_stack_root = None
         self.faucet_mac = None
         self.faucet_vips = None
+        self.udp_fwd = None
         self.max_hosts = None
         self.minimum_ip_size_check = None
         self.reserved_internal_vlan = None
@@ -232,6 +236,8 @@ class VLAN(Conf):
                 test_config_condition(
                     faucet_vip.network.prefixlen == faucet_vip.max_prefixlen,
                     'VIP cannot be a host address')
+        if self.udp_fwd != None:
+            print('UDP forwarding enabled on', str(self.udp_fwd))
 
         if self.routes:
             test_config_condition(not isinstance(self.routes, list), 'invalid VLAN routes format')

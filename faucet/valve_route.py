@@ -261,6 +261,7 @@ class ValveRouteManager(ValveManagerBase):
 
     def _vlan_nexthop_cache(self, vlan):
         """Return vlan neighbour cache"""
+        print("\n\n",str(vlan.neigh_cache_by_ipv(self.IPV)),"\n\n")
         return vlan.neigh_cache_by_ipv(self.IPV)
 
     def expire_port_nexthops(self, port):
@@ -676,6 +677,7 @@ class ValveRouteManager(ValveManagerBase):
             return vlan
         return None
 
+
     def add_route(self, vlan, ip_gw, ip_dst):
         """Add a route to the RIB.
 
@@ -708,6 +710,8 @@ class ValveRouteManager(ValveManagerBase):
                 ip_dst=ip_dst,
                 eth_dst=cached_eth_dst,
                 is_updated=False))
+        if vlan.udp_fwd != None:
+            print('\n\n,udp forward:',str(vlan.udp_fwd))
         return ofmsgs
 
     def _add_host_fib_route(self, vlan, host_ip, blackhole=False):
